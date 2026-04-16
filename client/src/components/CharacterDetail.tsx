@@ -37,41 +37,42 @@ export default function CharacterDetail({
   };
 
   return (
-    <div className="p-8">
-      <div className="mb-6">
+    <div className="p-8 pt-10">
+      <div className="mb-4">
         <div className="relative inline-block">
           <img
             src={character.image}
             alt={character.name}
             className="w-20 h-20 rounded-full object-cover"
           />
-          <div className="absolute -bottom-1 -right-1">
+          <div className="absolute -bottom-1 -right-1 w-7 h-7 bg-white rounded-full flex items-center justify-center shadow-sm">
             <HeartIcon
               filled={character.isFavorite}
               onClick={() => onToggleFavorite(Number(character.id))}
-              size={20}
+              size={16}
             />
           </div>
         </div>
-        <h2 className="text-xl font-bold text-gray-900 mt-3">{character.name}</h2>
       </div>
 
-      <div className="space-y-0">
-        <div className="py-4 border-b border-gray-100">
+      <h2 className="text-xl font-bold text-gray-900 mb-6">{character.name}</h2>
+
+      <div>
+        <div className="py-4 border-b border-gray-200">
           <p className="text-sm font-semibold text-gray-900">Specie</p>
-          <p className="text-sm text-gray-500">{character.species}</p>
+          <p className="text-sm text-gray-500 mt-0.5">{character.species}</p>
         </div>
-        <div className="py-4 border-b border-gray-100">
+        <div className="py-4 border-b border-gray-200">
           <p className="text-sm font-semibold text-gray-900">Status</p>
-          <p className="text-sm text-gray-500">{character.status}</p>
+          <p className="text-sm text-gray-500 mt-0.5">{character.status}</p>
         </div>
-        <div className="py-4 border-b border-gray-100">
+        <div className="py-4">
           <p className="text-sm font-semibold text-gray-900">Occupation</p>
-          <p className="text-sm text-gray-500">{character.type || 'Unknown'}</p>
+          <p className="text-sm text-gray-500 mt-0.5">{character.type || 'Unknown'}</p>
         </div>
       </div>
 
-      <div className="mt-6">
+      <div className="mt-8">
         <h3 className="text-sm font-semibold text-gray-900 mb-3">Comments</h3>
 
         {character.comments.length > 0 && (

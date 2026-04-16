@@ -1,22 +1,30 @@
 import { useState, useCallback } from 'react';
 import { useQuery, useMutation } from '@apollo/client/react';
-import type { Character, SortOrder } from './types';
+import type { Character, CharacterFilterType, SpeciesFilter } from './types';
 import type { GetCharactersData, GetCharactersVars, ToggleFavoriteData, SoftDeleteData } from './graphql/types';
 import { GET_CHARACTERS } from './graphql/queries';
 import { TOGGLE_FAVORITE, SOFT_DELETE_CHARACTER } from './graphql/mutations';
+import { useIsMobile } from './hooks/useIsMobile';
 import Sidebar from './components/Sidebar';
 import CharacterDetail from './components/CharacterDetail';
+import MobileDetailScreen from './components/MobileDetailScreen';
+import MobileFilterScreen from './components/MobileFilterScreen';
+
+type MobileView = 'list' | 'detail' | 'filters';
 
 export default function App() {
+  const isMobile = useIsMobile();
   const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(null);
-  const [sortOrder, setSortOrder] = useState<SortOrder>('ASC');
+  const [mobileView, setMobileView] = useState<MobileView>('list');
+  const [characterFilter, setCharacterFilter] = useState<CharacterFilterType>('All');
+  const [speciesFilter, setSpeciesFilter] = useState<SpeciesFilter>('All');
 
   const { data, loading, refetch } = useQuery<GetCharactersData, GetCharactersVars>(GET_CHARACTERS, {
     variables: {
       page: 1,
       limit: 50,
       sortBy: 'name',
-      sortOrder,
+      sortOrder: 'ASC',
     },
   });
 
@@ -29,6 +37,7 @@ export default function App() {
   const [softDelete] = useMutation<SoftDeleteData>(SOFT_DELETE_CHARACTER, {
     onCompleted: () => {
       setSelectedCharacter(null);
+      setMobileView('list');
       refetch();
     },
   });
@@ -37,7 +46,8 @@ export default function App() {
 
   const handleSelectCharacter = useCallback((character: Character) => {
     setSelectedCharacter(character);
-  }, []);
+    if (isMobile) setMobileView('detail');
+  }, [isMobile]);
 
   const handleToggleFavorite = useCallback(
     async (characterId: number) => {
@@ -51,10 +61,6 @@ export default function App() {
     },
     [toggleFavorite, selectedCharacter, characters],
   );
-
-  const handleToggleSort = useCallback(() => {
-    setSortOrder((prev) => (prev === 'ASC' ? 'DESC' : 'ASC'));
-  }, []);
 
   const handleCommentAdded = useCallback(() => {
     refetch().then(({ data: newData }) => {
@@ -73,6 +79,17 @@ export default function App() {
     }
   }, [selectedCharacter, softDelete]);
 
+  const handleApplyMobileFilters = useCallback((cf: CharacterFilterType, sf: SpeciesFilter) => {
+    setCharacterFilter(cf);
+    setSpeciesFilter(sf);
+    setMobileView('list');
+  }, []);
+
+  const handleClearFilters = useCallback(() => {
+    setCharacterFilter('All');
+    setSpeciesFilter('All');
+  }, []);
+
   if (loading && characters.length === 0) {
     return (
       <div className="h-screen flex items-center justify-center">
@@ -81,16 +98,57 @@ export default function App() {
     );
   }
 
-  return (
-    <div className="h-screen flex flex-col md:flex-row bg-white">
-      <div className="w-full md:w-80 lg:w-96 h-64 md:h-full shrink-0 overflow-hidden">
+  // ─── Mobile layout ──────────────────────────────────────────────────────────
+  if (isMobile) {
+    if (mobileView === 'filters') {
+      return (
+        <MobileFilterScreen
+          initialCharacterFilter={characterFilter}
+          initialSpeciesFilter={speciesFilter}
+          onApply={handleApplyMobileFilters}
+          onBack={() => setMobileView('list')}
+        />
+      );
+    }
+
+    if (mobileView === 'detail' && selectedCharacter) {
+      return (
+        <MobileDetailScreen
+          character={selectedCharacter}
+          onBack={() => setMobileView('list')}
+          onToggleFavorite={handleToggleFavorite}
+          onCommentAdded={handleCommentAdded}
+          onSoftDelete={handleSoftDelete}
+        />
+      );
+    }
+
+    return (
+      <div className="h-screen">
         <Sidebar
           characters={characters}
           selectedCharacter={selectedCharacter}
           onSelectCharacter={handleSelectCharacter}
           onToggleFavorite={handleToggleFavorite}
-          sortOrder={sortOrder}
-          onToggleSort={handleToggleSort}
+          isMobile
+          onOpenFilters={() => setMobileView('filters')}
+          characterFilter={characterFilter}
+          speciesFilter={speciesFilter}
+          onClearFilters={handleClearFilters}
+        />
+      </div>
+    );
+  }
+
+  // ─── Desktop layout ─────────────────────────────────────────────────────────
+  return (
+    <div className="h-screen flex bg-white">
+      <div className="w-80 lg:w-96 shrink-0 h-full overflow-hidden">
+        <Sidebar
+          characters={characters}
+          selectedCharacter={selectedCharacter}
+          onSelectCharacter={handleSelectCharacter}
+          onToggleFavorite={handleToggleFavorite}
         />
       </div>
 
