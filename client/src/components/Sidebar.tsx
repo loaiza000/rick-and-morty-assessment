@@ -166,6 +166,8 @@ export default function Sidebar({
         <FilterPanel
           onApplyFilters={handleApplyFilters}
           onClose={() => setShowFilters(false)}
+          initialCharacterFilter={characterFilter}
+          initialSpeciesFilter={speciesFilter}
         />
       )}
 

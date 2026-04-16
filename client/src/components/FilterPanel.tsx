@@ -4,11 +4,13 @@ import type { CharacterFilterType, SpeciesFilter } from '../types';
 interface FilterPanelProps {
   onApplyFilters: (characterFilter: CharacterFilterType, speciesFilter: SpeciesFilter) => void;
   onClose: () => void;
+  initialCharacterFilter?: CharacterFilterType;
+  initialSpeciesFilter?: SpeciesFilter;
 }
 
-export default function FilterPanel({ onApplyFilters, onClose }: FilterPanelProps) {
-  const [characterFilter, setCharacterFilter] = useState<CharacterFilterType>('All');
-  const [speciesFilter, setSpeciesFilter] = useState<SpeciesFilter>('All');
+export default function FilterPanel({ onApplyFilters, onClose, initialCharacterFilter = 'All', initialSpeciesFilter = 'All' }: FilterPanelProps) {
+  const [characterFilter, setCharacterFilter] = useState<CharacterFilterType>(initialCharacterFilter);
+  const [speciesFilter, setSpeciesFilter] = useState<SpeciesFilter>(initialSpeciesFilter);
 
   const characterOptions: CharacterFilterType[] = ['All', 'Starred', 'Others'];
   const speciesOptions: SpeciesFilter[] = ['All', 'Human', 'Alien'];

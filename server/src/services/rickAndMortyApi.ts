@@ -14,7 +14,7 @@ export class RickAndMortyApiService {
 
   constructor() {
     this.http = axios.create({
-      baseURL: process.env.RICK_AND_MORTY_API_URL || 'https://rickandmortyapi.com/api',
+      baseURL: process.env.RICK_AND_MORTY_API_URL,
       timeout: API_TIMEOUT,
       headers: { Accept: 'application/json' },
     });

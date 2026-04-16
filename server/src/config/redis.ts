@@ -9,7 +9,7 @@ export class CacheService {
   constructor() {
     this.client = createClient({
       socket: {
-        host: process.env.REDIS_HOST || '127.0.0.1',
+        host: process.env.REDIS_HOST,
         port: parseInt(process.env.REDIS_PORT || '6379', 10),
         reconnectStrategy: (retries: number) => Math.min(retries * 100, 5000),
       },

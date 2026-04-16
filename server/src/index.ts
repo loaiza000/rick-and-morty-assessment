@@ -19,7 +19,7 @@ import { cacheService } from './config/redis';
 const startServer = async (): Promise<void> => {
   const app = express();
   const httpServer = http.createServer(app);
-  const PORT = parseInt(process.env.PORT || '4000', 10);
+  const PORT = parseInt(process.env.PORT || '4001', 10);
 
   // ─── Middleware ───────────────────────────────────────────────────────────
 
