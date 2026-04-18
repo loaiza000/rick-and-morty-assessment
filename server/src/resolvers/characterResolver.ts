@@ -75,9 +75,9 @@ export const characterResolvers = {
   // ─── Field resolvers ────────────────────────────────────────────────────
 
   Character: {
-    isFavorite: async (parent: { id: number; favorite?: unknown }) => {
-      if (parent.favorite !== undefined) {
-        return parent.favorite !== null;
+    isFavorite: async (parent: { id: number; favorites?: unknown[] }) => {
+      if (parent.favorites !== undefined) {
+        return Array.isArray(parent.favorites) && parent.favorites.length > 0;
       }
       const fav = await Favorite.findOne({ where: { characterId: parent.id } });
       return fav !== null;

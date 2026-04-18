@@ -57,7 +57,7 @@ export default function CharacterDetail({
 
       <h2 className="text-xl font-bold text-gray-900 mb-6">{character.name}</h2>
 
-      <div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6">
         <div className="py-4 border-b border-gray-200">
           <p className="text-sm font-semibold text-gray-900">Specie</p>
           <p className="text-sm text-gray-500 mt-0.5">{character.species}</p>
@@ -66,9 +66,13 @@ export default function CharacterDetail({
           <p className="text-sm font-semibold text-gray-900">Status</p>
           <p className="text-sm text-gray-500 mt-0.5">{character.status}</p>
         </div>
+        <div className="py-4 border-b border-gray-200">
+          <p className="text-sm font-semibold text-gray-900">Gender</p>
+          <p className="text-sm text-gray-500 mt-0.5">{character.gender}</p>
+        </div>
         <div className="py-4">
-          <p className="text-sm font-semibold text-gray-900">Occupation</p>
-          <p className="text-sm text-gray-500 mt-0.5">{character.type || 'Unknown'}</p>
+          <p className="text-sm font-semibold text-gray-900">Origin</p>
+          <p className="text-sm text-gray-500 mt-0.5">{character.origin || 'Unknown'}</p>
         </div>
       </div>
 

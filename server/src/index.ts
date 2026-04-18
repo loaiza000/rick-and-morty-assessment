@@ -15,6 +15,7 @@ import { resolvers, createGraphQLContext } from './resolvers';
 import { requestLogger, errorHandler } from './middleware/logger';
 import { sequelize } from './models';
 import { cacheService } from './config/redis';
+import { startCharacterUpdaterCron } from './cron/characterUpdater';
 
 const startServer = async (): Promise<void> => {
   const app = express();
@@ -97,6 +98,10 @@ const startServer = async (): Promise<void> => {
     console.log(`[Server] Running on http://localhost:${PORT}`);
     console.log(`[Server] GraphQL at http://localhost:${PORT}${apolloServer.graphqlPath}`);
   });
+
+  // ─── Cron jobs ──────────────────────────────────────────────────────────
+
+  startCharacterUpdaterCron();
 
   // ─── Graceful shutdown ───────────────────────────────────────────────────
 

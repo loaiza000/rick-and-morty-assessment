@@ -21,7 +21,6 @@ export const initFavoriteModel = (sequelize: Sequelize): typeof Favorite => {
       characterId: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        unique: true,
         references: {
           model: 'characters',
           key: 'id',

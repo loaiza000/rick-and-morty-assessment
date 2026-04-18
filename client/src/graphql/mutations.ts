@@ -7,27 +7,14 @@ export const TOGGLE_FAVORITE = gql`
       name
       status
       species
-      type
       gender
-      origin {
-        name
-        url
-      }
-      location {
-        name
-        url
-      }
+      origin
       image
-      episode
-      url
-      created
       isFavorite
       comments {
         id
-        characterId
         content
         createdAt
-        updatedAt
       }
     }
   }

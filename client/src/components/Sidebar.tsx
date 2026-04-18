@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import type { Character, CharacterFilterType, SpeciesFilter } from '../types';
+import type { Character, CharacterFilterType, SpeciesFilter, SortOrder } from '../types';
 import CharacterCard from './CharacterCard';
 import FilterPanel from './FilterPanel';
 
@@ -13,6 +13,8 @@ interface SidebarProps {
   characterFilter?: CharacterFilterType;
   speciesFilter?: SpeciesFilter;
   onClearFilters?: () => void;
+  sortOrder?: SortOrder;
+  onToggleSort?: () => void;
 }
 
 export default function Sidebar({
@@ -25,6 +27,8 @@ export default function Sidebar({
   characterFilter: externalCharacterFilter,
   speciesFilter: externalSpeciesFilter,
   onClearFilters,
+  sortOrder = 'ASC',
+  onToggleSort,
 }: SidebarProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [showFilters, setShowFilters] = useState(false);
@@ -52,8 +56,6 @@ export default function Sidebar({
     if (speciesFilter !== 'All') {
       result = result.filter((c) => c.species === speciesFilter);
     }
-
-    result.sort((a, b) => a.name.localeCompare(b.name));
 
     return result;
   }, [characters, searchTerm, speciesFilter]);
@@ -134,6 +136,33 @@ export default function Sidebar({
                 className="w-full pl-9 pr-3 py-2.5 text-sm border border-gray-200 rounded-lg outline-none focus:border-purple transition-colors"
               />
             </div>
+
+            <button
+              onClick={onToggleSort}
+              className="p-2.5 rounded-lg border cursor-pointer transition-colors bg-white text-gray-500 border-gray-200 hover:border-purple"
+              aria-label={sortOrder === 'ASC' ? 'Sort Z to A' : 'Sort A to Z'}
+              title={sortOrder === 'ASC' ? 'Sort Z to A' : 'Sort A to Z'}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                {sortOrder === 'ASC' ? (
+                  <>
+                    <path d="M3 6h10" />
+                    <path d="M3 12h7" />
+                    <path d="M3 18h4" />
+                    <path d="M17 6v12" />
+                    <path d="M21 15l-4 4-4-4" />
+                  </>
+                ) : (
+                  <>
+                    <path d="M3 6h4" />
+                    <path d="M3 12h7" />
+                    <path d="M3 18h10" />
+                    <path d="M17 18V6" />
+                    <path d="M21 9l-4-4-4 4" />
+                  </>
+                )}
+              </svg>
+            </button>
 
             <button
               onClick={handleFilterClick}

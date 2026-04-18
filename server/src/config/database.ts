@@ -7,9 +7,7 @@ const buildDatabaseConfig = (): Options => ({
   host: process.env.DB_HOST,
   port: parseInt(process.env.DB_PORT || '5432', 10),
   dialect: (process.env.DB_DIALECT as 'postgres' | 'mysql') || 'postgres',
-  logging: process.env.NODE_ENV === 'development'
-    ? (msg: string) => console.log(`[DB] ${msg}`)
-    : false,
+  logging: false,
   pool: {
     max: 10,
     min: 0,

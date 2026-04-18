@@ -27,11 +27,6 @@ export const typeDefs = gql`
 
   # ─── Types ──────────────────────────────────────────────────────────────────
 
-  type OriginLocation {
-    name: String!
-    url: String!
-  }
-
   type Comment {
     id: ID!
     characterId: Int!
@@ -45,14 +40,9 @@ export const typeDefs = gql`
     name: String!
     status: CharacterStatus!
     species: String!
-    type: String
     gender: CharacterGender!
-    origin: OriginLocation!
-    location: OriginLocation!
+    origin: String!
     image: String!
-    episode: [String!]!
-    url: String!
-    created: String!
     isFavorite: Boolean!
     comments: [Comment!]!
   }

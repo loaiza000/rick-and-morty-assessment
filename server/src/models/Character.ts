@@ -3,7 +3,6 @@ import {
   CharacterAttributes,
   CharacterStatus,
   CharacterGender,
-  OriginLocation,
 } from '../types';
 
 interface CharacterCreationAttributes extends Omit<CharacterAttributes, 'id'> {
@@ -15,14 +14,9 @@ export class Character extends Model<CharacterAttributes, CharacterCreationAttri
   declare name: string;
   declare status: CharacterStatus;
   declare species: string;
-  declare type: string;
   declare gender: CharacterGender;
-  declare origin: OriginLocation;
-  declare location: OriginLocation;
+  declare origin: string;
   declare image: string;
-  declare episode: string[];
-  declare url: string;
-  declare created: string;
 
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
@@ -50,42 +44,19 @@ export const initCharacterModel = (sequelize: Sequelize): typeof Character => {
         type: DataTypes.STRING(255),
         allowNull: false,
       },
-      type: {
-        type: DataTypes.STRING(255),
-        allowNull: true,
-        defaultValue: '',
-      },
       gender: {
         type: DataTypes.ENUM(...Object.values(CharacterGender)),
         allowNull: false,
       },
       origin: {
-        type: DataTypes.JSONB,
+        type: DataTypes.STRING(255),
         allowNull: false,
-        defaultValue: { name: '', url: '' },
-      },
-      location: {
-        type: DataTypes.JSONB,
-        allowNull: false,
-        defaultValue: { name: '', url: '' },
+        defaultValue: '',
       },
       image: {
         type: DataTypes.STRING(512),
         allowNull: false,
         validate: { isUrl: true },
-      },
-      episode: {
-        type: DataTypes.JSONB,
-        allowNull: false,
-        defaultValue: [],
-      },
-      url: {
-        type: DataTypes.STRING(512),
-        allowNull: false,
-      },
-      created: {
-        type: DataTypes.STRING,
-        allowNull: false,
       },
     },
     {

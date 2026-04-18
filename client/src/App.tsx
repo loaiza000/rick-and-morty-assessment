@@ -1,6 +1,7 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
+import { Routes, Route, useNavigate, useParams } from 'react-router-dom';
 import { useQuery, useMutation } from '@apollo/client/react';
-import type { Character, CharacterFilterType, SpeciesFilter } from './types';
+import type { Character, CharacterFilterType, SpeciesFilter, SortOrder } from './types';
 import type { GetCharactersData, GetCharactersVars, ToggleFavoriteData, SoftDeleteData } from './graphql/types';
 import { GET_CHARACTERS } from './graphql/queries';
 import { TOGGLE_FAVORITE, SOFT_DELETE_CHARACTER } from './graphql/mutations';
@@ -10,21 +11,24 @@ import CharacterDetail from './components/CharacterDetail';
 import MobileDetailScreen from './components/MobileDetailScreen';
 import MobileFilterScreen from './components/MobileFilterScreen';
 
-type MobileView = 'list' | 'detail' | 'filters';
+type MobileView = 'list' | 'filters';
 
-export default function App() {
+function CharacterPage() {
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
   const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(null);
   const [mobileView, setMobileView] = useState<MobileView>('list');
   const [characterFilter, setCharacterFilter] = useState<CharacterFilterType>('All');
   const [speciesFilter, setSpeciesFilter] = useState<SpeciesFilter>('All');
+  const [sortOrder, setSortOrder] = useState<SortOrder>('ASC');
 
   const { data, loading, refetch } = useQuery<GetCharactersData, GetCharactersVars>(GET_CHARACTERS, {
     variables: {
       page: 1,
       limit: 50,
       sortBy: 'name',
-      sortOrder: 'ASC',
+      sortOrder,
     },
   });
 
@@ -37,17 +41,27 @@ export default function App() {
   const [softDelete] = useMutation<SoftDeleteData>(SOFT_DELETE_CHARACTER, {
     onCompleted: () => {
       setSelectedCharacter(null);
-      setMobileView('list');
+      navigate('/');
       refetch();
     },
   });
 
   const characters: Character[] = data?.characters?.data ?? [];
 
+  // Sync selected character from URL param
+  useEffect(() => {
+    if (id && characters.length > 0) {
+      const found = characters.find((c) => c.id === id);
+      if (found) setSelectedCharacter(found);
+    } else if (!id) {
+      setSelectedCharacter(null);
+    }
+  }, [id, characters]);
+
   const handleSelectCharacter = useCallback((character: Character) => {
     setSelectedCharacter(character);
-    if (isMobile) setMobileView('detail');
-  }, [isMobile]);
+    navigate(`/character/${character.id}`);
+  }, [navigate]);
 
   const handleToggleFavorite = useCallback(
     async (characterId: number) => {
@@ -90,6 +104,10 @@ export default function App() {
     setSpeciesFilter('All');
   }, []);
 
+  const handleToggleSort = useCallback(() => {
+    setSortOrder((prev) => (prev === 'ASC' ? 'DESC' : 'ASC'));
+  }, []);
+
   if (loading && characters.length === 0) {
     return (
       <div className="h-screen flex items-center justify-center">
@@ -111,11 +129,11 @@ export default function App() {
       );
     }
 
-    if (mobileView === 'detail' && selectedCharacter) {
+    if (id && selectedCharacter) {
       return (
         <MobileDetailScreen
           character={selectedCharacter}
-          onBack={() => setMobileView('list')}
+          onBack={() => navigate('/')}
           onToggleFavorite={handleToggleFavorite}
           onCommentAdded={handleCommentAdded}
           onSoftDelete={handleSoftDelete}
@@ -135,6 +153,8 @@ export default function App() {
           characterFilter={characterFilter}
           speciesFilter={speciesFilter}
           onClearFilters={handleClearFilters}
+          sortOrder={sortOrder}
+          onToggleSort={handleToggleSort}
         />
       </div>
     );
@@ -149,6 +169,8 @@ export default function App() {
           selectedCharacter={selectedCharacter}
           onSelectCharacter={handleSelectCharacter}
           onToggleFavorite={handleToggleFavorite}
+          sortOrder={sortOrder}
+          onToggleSort={handleToggleSort}
         />
       </div>
 
@@ -176,5 +198,14 @@ export default function App() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<CharacterPage />} />
+      <Route path="/character/:id" element={<CharacterPage />} />
+    </Routes>
   );
 }

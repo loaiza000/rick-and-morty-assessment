@@ -9,6 +9,7 @@ import {
   SortOrder,
   ICharacterService,
 } from '../types';
+import { LogExecutionTime } from '../decorators/executionTime';
 
 const CACHE_PREFIX = 'characters';
 const CACHE_SINGLE_PREFIX = 'character';
@@ -19,6 +20,7 @@ export class CharacterService implements ICharacterService {
 
   // ─── Queries ─────────────────────────────────────────────────────────────
 
+  @LogExecutionTime
   async findAll(
     filter?: CharacterFilter,
     pagination: PaginationArgs = { page: 1, limit: 20, sortBy: 'name', sortOrder: SortOrder.ASC },
@@ -41,7 +43,7 @@ export class CharacterService implements ICharacterService {
       order: [[pagination.sortBy, pagination.sortOrder]],
       include: [
         { model: Comment, as: 'comments', required: false },
-        { model: Favorite, as: 'favorite', required: false },
+        { model: Favorite, as: 'favorites', required: false },
       ],
     });
 
@@ -58,6 +60,7 @@ export class CharacterService implements ICharacterService {
     return result;
   }
 
+  @LogExecutionTime
   async findById(id: number): Promise<Character | null> {
     const cacheKey = `${CACHE_SINGLE_PREFIX}:${id}`;
 
@@ -67,7 +70,7 @@ export class CharacterService implements ICharacterService {
     const character = await Character.findByPk(id, {
       include: [
         { model: Comment, as: 'comments', required: false },
-        { model: Favorite, as: 'favorite', required: false },
+        { model: Favorite, as: 'favorites', required: false },
       ],
     });
 
@@ -78,6 +81,7 @@ export class CharacterService implements ICharacterService {
     return character;
   }
 
+  @LogExecutionTime
   async findFavorites(): Promise<Character[]> {
     const cached = await this.cache.get<Character[]>(CACHE_FAVORITES_KEY);
     if (cached) return cached;
@@ -87,7 +91,7 @@ export class CharacterService implements ICharacterService {
         { model: Comment, as: 'comments', required: false },
         {
           model: Favorite,
-          as: 'favorite',
+          as: 'favorites',
           required: true, // INNER JOIN — only characters with a favorite record
         },
       ],
@@ -99,6 +103,7 @@ export class CharacterService implements ICharacterService {
 
   // ─── Mutations ───────────────────────────────────────────────────────────
 
+  @LogExecutionTime
   async toggleFavorite(characterId: number): Promise<Character> {
     const character = await this.findByIdOrFail(characterId);
 
@@ -149,11 +154,8 @@ export class CharacterService implements ICharacterService {
       (where as Record<string, unknown>).gender = filter.gender;
     }
     if (filter.origin) {
-      (where as Record<string, unknown>).origin = {
-        name: { [Op.iLike]: `%${filter.origin}%` },
-      };
+      (where as Record<string, unknown>).origin = { [Op.iLike]: `%${filter.origin}%` };
     }
-
     return where;
   }
 

@@ -11,7 +11,6 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
     characterId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      unique: true,
       references: {
         model: 'characters',
         key: 'id',
@@ -26,7 +25,7 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
     },
   });
 
-  await queryInterface.addIndex('favorites', ['characterId'], { unique: true });
+  await queryInterface.addIndex('favorites', ['characterId']);
 }
 
 export async function down(queryInterface: QueryInterface): Promise<void> {

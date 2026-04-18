@@ -1,8 +1,3 @@
-export interface OriginLocation {
-  name: string;
-  url: string;
-}
-
 export interface Comment {
   id: string;
   characterId: number;
@@ -16,14 +11,9 @@ export interface Character {
   name: string;
   status: string;
   species: string;
-  type: string;
   gender: string;
-  origin: OriginLocation;
-  location: OriginLocation;
+  origin: string;
   image: string;
-  episode: string[];
-  url: string;
-  created: string;
   isFavorite: boolean;
   comments: Comment[];
 }

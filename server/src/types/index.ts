@@ -18,13 +18,6 @@ export enum SortOrder {
   DESC = 'DESC',
 }
 
-// ─── Value Objects ───────────────────────────────────────────────────────────
-
-export interface OriginLocation {
-  name: string;
-  url: string;
-}
-
 // ─── Domain Interfaces ───────────────────────────────────────────────────────
 
 export interface CharacterAttributes {
@@ -32,14 +25,9 @@ export interface CharacterAttributes {
   name: string;
   status: CharacterStatus;
   species: string;
-  type: string;
   gender: CharacterGender;
-  origin: OriginLocation;
-  location: OriginLocation;
+  origin: string;
   image: string;
-  episode: string[];
-  url: string;
-  created: string;
 }
 
 export interface CommentAttributes {
@@ -88,14 +76,9 @@ export interface RickAndMortyApiCharacter {
   name: string;
   status: string;
   species: string;
-  type: string;
   gender: string;
-  origin: OriginLocation;
-  location: OriginLocation;
+  origin: { name: string; url: string };
   image: string;
-  episode: string[];
-  url: string;
-  created: string;
 }
 
 export interface RickAndMortyApiResponse {

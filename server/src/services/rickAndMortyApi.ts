@@ -84,13 +84,8 @@ export class RickAndMortyApiService {
     name: raw.name,
     status: raw.status as CharacterStatus,
     species: raw.species,
-    type: raw.type || '',
     gender: raw.gender as CharacterGender,
-    origin: { name: raw.origin.name, url: raw.origin.url },
-    location: { name: raw.location.name, url: raw.location.url },
+    origin: raw.origin.name || '',
     image: raw.image,
-    episode: raw.episode,
-    url: raw.url,
-    created: raw.created,
   });
 }

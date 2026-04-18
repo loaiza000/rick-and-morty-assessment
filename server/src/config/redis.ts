@@ -52,10 +52,8 @@ export class CacheService {
     try {
       const raw = await this.client.get(key);
       if (raw) {
-        console.log(`[Cache] HIT  → ${key}`);
         return JSON.parse(raw) as T;
       }
-      console.log(`[Cache] MISS → ${key}`);
       return null;
     } catch {
       console.error(`[Cache] Error reading key: ${key}`);

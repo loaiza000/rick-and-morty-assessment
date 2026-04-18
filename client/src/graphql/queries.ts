@@ -20,20 +20,9 @@ export const GET_CHARACTERS = gql`
         name
         status
         species
-        type
         gender
-        origin {
-          name
-          url
-        }
-        location {
-          name
-          url
-        }
+        origin
         image
-        episode
-        url
-        created
         isFavorite
         comments {
           id
@@ -58,20 +47,9 @@ export const GET_CHARACTER = gql`
       name
       status
       species
-      type
       gender
-      origin {
-        name
-        url
-      }
-      location {
-        name
-        url
-      }
+      origin
       image
-      episode
-      url
-      created
       isFavorite
       comments {
         id
@@ -91,20 +69,9 @@ export const GET_FAVORITES = gql`
       name
       status
       species
-      type
       gender
-      origin {
-        name
-        url
-      }
-      location {
-        name
-        url
-      }
+      origin
       image
-      episode
-      url
-      created
       isFavorite
       comments {
         id

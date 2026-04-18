@@ -20,40 +20,17 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
       type: DataTypes.STRING(255),
       allowNull: false,
     },
-    type: {
-      type: DataTypes.STRING(255),
-      allowNull: true,
-      defaultValue: '',
-    },
     gender: {
       type: DataTypes.ENUM('Female', 'Male', 'Genderless', 'unknown'),
       allowNull: false,
     },
     origin: {
-      type: DataTypes.JSONB,
+      type: DataTypes.STRING(255),
       allowNull: false,
-      defaultValue: { name: '', url: '' },
-    },
-    location: {
-      type: DataTypes.JSONB,
-      allowNull: false,
-      defaultValue: { name: '', url: '' },
+      defaultValue: '',
     },
     image: {
       type: DataTypes.STRING(512),
-      allowNull: false,
-    },
-    episode: {
-      type: DataTypes.JSONB,
-      allowNull: false,
-      defaultValue: [],
-    },
-    url: {
-      type: DataTypes.STRING(512),
-      allowNull: false,
-    },
-    created: {
-      type: DataTypes.STRING,
       allowNull: false,
     },
     createdAt: {
@@ -75,7 +52,6 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
   await queryInterface.addIndex('characters', ['name']);
   await queryInterface.addIndex('characters', ['status']);
   await queryInterface.addIndex('characters', ['species']);
-  await queryInterface.addIndex('characters', ['gender']);
 }
 
 export async function down(queryInterface: QueryInterface): Promise<void> {

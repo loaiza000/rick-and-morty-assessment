@@ -14,7 +14,7 @@ initFavoriteModel(sequelize);
 Character.hasMany(Comment, { foreignKey: 'characterId', as: 'comments' });
 Comment.belongsTo(Character, { foreignKey: 'characterId', as: 'character' });
 
-Character.hasOne(Favorite, { foreignKey: 'characterId', as: 'favorite' });
+Character.hasMany(Favorite, { foreignKey: 'characterId', as: 'favorites' });
 Favorite.belongsTo(Character, { foreignKey: 'characterId', as: 'character' });
 
 // ─── Exports ─────────────────────────────────────────────────────────────────
