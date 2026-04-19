@@ -70,13 +70,13 @@ export default function CharacterDetail({
           <p className="text-sm font-semibold text-gray-900">Gender</p>
           <p className="text-sm text-gray-500 mt-0.5">{character.gender}</p>
         </div>
-        <div className="py-4">
+        <div className="py-4 border-b border-gray-200">
           <p className="text-sm font-semibold text-gray-900">Origin</p>
           <p className="text-sm text-gray-500 mt-0.5">{character.origin || 'Unknown'}</p>
         </div>
       </div>
 
-      <div className="mt-8">
+      <div className="mt-12">
         <h3 className="text-sm font-semibold text-gray-900 mb-3">Comments</h3>
 
         {character.comments.length > 0 && (
